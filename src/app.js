@@ -1,18 +1,31 @@
 import express from "express";
-import cors from 'cors';
+import cors from "cors";
 import cookieParser from "cookie-parser";
 
-const app = express()
+// Initialize express app
+const app = express();
 
+// CORS configuration
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN, // Ensure CORS_ORIGIN is defined in .env
     credentials: true
-}))
-app.use(express.json({limit: "16kb"}))
-app.use(express.urlencoded({extended: true, limit: "16kb"}))
-app.use(express.static("public"))
-app.use(cookieParser())
+}));
 
+// Middleware for parsing JSON and URL-encoded data
+app.use(express.json({ limit: "16kb" }));
+app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 
+// Static file serving
+app.use(express.static("public"));
 
-export { app }
+// Cookie parser for handling cookies
+app.use(cookieParser());
+
+// Import routes
+import userRouter from './routes/user.routes.js';
+
+// Use the imported router for /api/v1/users
+app.use('/api/v1/users', userRouter);
+
+// Export the app if it's needed in another module
+export { app };
